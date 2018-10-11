@@ -16,5 +16,9 @@ export class NavBarComponent {
     );
     
   constructor(private breakpointObserver: BreakpointObserver) {}
+
+  logout() {
+    //TODO
+  }
   
   }
