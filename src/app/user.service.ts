@@ -13,7 +13,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getUser(username: string, password:string): Observable<User> {
-    //const url = `${this.usersUrl}?username=^${username}$` //&password=${password}`
+    //TODO retourner que le TOKEN
     const url = `${this.usersUrl}?username=^${username}$&password=^${password}$`
     return this.http.get<User>(url).pipe(
       tap( user=> console.log(`User found = ${user}`)),
