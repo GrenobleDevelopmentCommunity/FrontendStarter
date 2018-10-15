@@ -6,15 +6,15 @@ import { UserService } from './user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AutGuard implements CanActivate {
+export class RoleAuthGuard implements CanActivate {
   constructor(private auth: UserService, private router: Router) {}
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
-      if (!this.auth.isLoggedIn()) {
-        this.router.navigate(['login'], { replaceUrl: true });
-        return false;
+    state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+      const expectedRole = next.data.expectedRole;
+      const role = localStorage.getItem('role'); // #FIXME a changer avec un vrais service
+      if ( role !== expectedRole || !this.auth.isLoggedIn()) {
+        return false; // FIXME envoyer sur une autre route ?
       }
       return true;
   }

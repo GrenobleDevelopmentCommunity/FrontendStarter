@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import { isDefined } from '../../node_modules/@angular/compiler/src/util';
+import { tap } from 'rxjs/operators';
+import { Token } from './in-memory-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,43 +12,27 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  authenticateUser(username: string, password: string): Observable<boolean> {
-    const subject = new Subject<boolean>();
+  authenticateUser(username: string, password: string): Observable<Token> {
     const request = 'login';
-    this.http.post<string>(this.usersUrl, { username, password, request }).subscribe(
-      (body) => {
-        localStorage.setItem('token', body);
+    return this.http.post<Token>(this.usersUrl, { username, password, request }).pipe(
+      tap(({ token, role }) => {
+        localStorage.setItem('token', token);
         localStorage.setItem('username', username);
-        subject.next(true);
-      },
-      () => subject.next(false)
-      );
-
-      return subject.asObservable();
+        localStorage.setItem('role', role.toString());
+      })
+    );
   }
 
   isLoggedIn(): boolean {
-    const token = localStorage.getItem('token');
-    if (isDefined(token)) {
-      // TODO verifier la validite du token (date expiration)
-      return true;
-    }
-    return false;
+    // TODO: verifier la validite du token (date expiration)
+    return !!localStorage.getItem('token');
   }
 
-  logout(): Observable<boolean> {
-    const subject = new Subject<boolean>();
-    const request = 'logout';
+  logout(): Observable<void> {
     const token = localStorage.getItem('token');
-    this.http.post<string>(this.usersUrl, { token, request }).subscribe(
-      (body) => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        subject.next(true);
-      },
-      () => subject.next(false)
-      );
-
-      return subject.asObservable();
+    const request = 'logout';
+    return this.http.post<void>(this.usersUrl, { token, request }).pipe(
+      tap(() => localStorage.clear())
+    );
   }
 }

@@ -22,12 +22,8 @@ export class NavBarComponent {
 
   logout() {
     this.userservice.logout().subscribe(
-      (success) => { if (success) {
-        this.router.navigate(['/']);
-      } else {
-        this.errorMessage = 'Error while login out';
-      }
-    }
+      () => this.router.navigate(['/']),
+      () => this.errorMessage = 'Error while login out'
     );
   }
 

@@ -6,14 +6,13 @@ import { UserService } from './user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AutGuard implements CanActivate {
+export class LoginGuard implements CanActivate {
   constructor(private auth: UserService, private router: Router) {}
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
-      if (!this.auth.isLoggedIn()) {
-        this.router.navigate(['login'], { replaceUrl: true });
+    state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+      if (this.auth.isLoggedIn()) {
+        this.router.navigate(['index'], { replaceUrl: true });
         return false;
       }
       return true;

@@ -21,13 +21,8 @@ export class LoginComponent implements OnInit {
   login(): void {
     this.userservice.authenticateUser(this.username, this.password)
       .subscribe(
-        (bool) => {
-          if (bool) {
-            this.router.navigate(['index']);
-          } else {
-            this.errorMessage = 'Bad credentials';
-          }
-        }
+        () => this.router.navigate(['index'], { replaceUrl: true }),
+        () => this.errorMessage = 'Bad credentials'
       );
   }
 }
