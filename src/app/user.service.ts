@@ -1,42 +1,53 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { RequestInfo } from 'angular-in-memory-web-api';
-import { User } from './user'
-import { catchError, map, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { isDefined } from '../../node_modules/@angular/compiler/src/util';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private usersUrl = 'api/users';
+  private readonly usersUrl = 'api/users';
+
   constructor(private http: HttpClient) { }
 
-  getUser(username: string, password:string): Observable<User> {
-    //TODO retourner que le TOKEN
-    const url = `${this.usersUrl}?username=^${username}$&password=^${password}$`
-    return this.http.get<User>(url).pipe(
-      tap( user=> console.log(`User found = ${user}`)),
-      catchError(this.handleError<User>(`getUser Username=${username}, password=${password}`))
-    );
-  
+  authenticateUser(username: string, password: string): Observable<boolean> {
+    const subject = new Subject<boolean>();
+    const request = 'login';
+    this.http.post<string>(this.usersUrl, { username, password, request }).subscribe(
+      (body) => {
+        localStorage.setItem('token', body);
+        localStorage.setItem('username', username);
+        subject.next(true);
+      },
+      () => subject.next(false)
+      );
+
+      return subject.asObservable();
   }
 
+  isLoggedIn(): boolean {
+    const token = localStorage.getItem('token');
+    if (isDefined(token)) {
+      // TODO verifier la validite du token (date expiration)
+      return true;
+    }
+    return false;
+  }
 
-  /**
- * Handle Http operation that failed.
- * Let the app continue.
- * @param operation - name of the operation that failed
- * @param result - optional value to return as the observable result
- */
-private handleError<T> (operation = 'operation', result?: T) {
-  return (error: any): Observable<T> => {
+  logout(): Observable<boolean> {
+    const subject = new Subject<boolean>();
+    const request = 'logout';
+    const token = localStorage.getItem('token');
+    this.http.post<string>(this.usersUrl, { token, request }).subscribe(
+      (body) => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        subject.next(true);
+      },
+      () => subject.next(false)
+      );
 
-    // TODO: send the error to remote logging infrastructure
-    console.error(error); // log to console instead
-
-    // Let the app keep running by returning an empty result.
-    return of(result as T);
-  };
-}
+      return subject.asObservable();
+  }
 }
