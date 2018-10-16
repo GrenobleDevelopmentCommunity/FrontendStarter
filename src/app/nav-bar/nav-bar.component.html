@@ -15,8 +15,9 @@
     [opened]="!(isHandset$ | async)">
     
     <mat-nav-list>
-      <a mat-list-item href="#">Accueil</a>
-      <a mat-list-item href="#">Profile</a>
+      <a mat-list-item [routerLink]="['/']">Accueil</a>
+      <a mat-list-item [routerLink]="['/profile']">Profile</a>
+      <a mat-list-item [routerLink]="['/admin']" *ngIf="isAdmin()" href="#">Admin</a>
       <a mat-list-item (click)="logout()">Logout</a>
     </mat-nav-list>
   </mat-sidenav>
@@ -24,6 +25,6 @@
     <div class="alert alert-danger" *ngIf="errorMessage">
       {{errorMessage}}
     </div>
-    
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

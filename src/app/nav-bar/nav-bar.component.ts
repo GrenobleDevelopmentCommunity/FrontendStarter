@@ -27,4 +27,8 @@ export class NavBarComponent {
     );
   }
 
+  isAdmin(): boolean {
+    return this.userservice.isAdmin();
+  }
+
   }

@@ -23,12 +23,18 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data.service';
 import { HttpClientModule } from '@angular/common/http';
+import { ProfileComponent } from './profile/profile.component';
+import { AdminComponent } from './admin/admin.component';
+import { AccueilComponent } from './accueil/accueil.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavBarComponent,
-    LoginComponent
+    LoginComponent,
+    ProfileComponent,
+    AdminComponent,
+    AccueilComponent
   ],
   imports: [
     BrowserModule,
