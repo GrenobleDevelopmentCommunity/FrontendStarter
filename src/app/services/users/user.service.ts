@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Token, Role } from './in-memory-data.service';
+import { Token, Role } from '../in-memory-data.service';
 
 @Injectable({
   providedIn: 'root'

@@ -3,7 +3,7 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { UserService } from '../user.service';
+import { UserService } from '../services/users/user.service';
 import { MatSidenav } from '@angular/material';
 
 @Component({
@@ -25,15 +25,13 @@ export class NavBarComponent {
     public userservice: UserService) {}
 
   logout() {
-    // close();
+    this.close();
     this.userservice.logout().subscribe(
       () => {
         this.successMessage = 'Logged out with succes';
         this.router.navigate(['login']);
       },
-      () => {
-        this.errorMessage = 'Error while login out';
-      }
+      () => this.errorMessage = 'Error while login out'
     );
     this.fadeOutTimer = timer(3000);
     const fadeOutMessages = this.fadeOutTimer.subscribe(

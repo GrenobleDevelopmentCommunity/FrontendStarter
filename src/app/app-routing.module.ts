@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
-import { AutGuard } from './aut.guard';
-import { RoleAuthGuard } from './role-auth.guard';
-import { LoginGuard } from './login.guard';
+import { AutGuard } from './guards/aut.guard';
+import { RoleAuthGuard } from './guards/role-auth.guard';
+import { LoginGuard } from './guards/login.guard';
 import { ProfileComponent } from './profile/profile.component';
 import { AdminComponent } from './admin/admin.component';
-import { Role } from './in-memory-data.service';
+import { Role } from './services/in-memory-data.service';
 import { AccueilComponent } from './accueil/accueil.component';
 
 const routes: Routes = [

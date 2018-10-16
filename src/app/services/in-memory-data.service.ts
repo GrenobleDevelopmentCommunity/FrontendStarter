@@ -1,5 +1,5 @@
 import { InMemoryDbService, RequestInfo, RequestInfoUtilities, ResponseOptions } from 'angular-in-memory-web-api';
-import { Observable } from '../../node_modules/rxjs';
+import { Observable } from 'rxjs';
 
 export const enum Role {
   Admin,
