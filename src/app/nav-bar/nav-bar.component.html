@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-    <button mat-icon-button (click)="drawer.toggle()">
+    <button mat-icon-button (click)="drawer.toggle()" *ngIf="(isHandset$ | async)">
       <mat-icon>menu</mat-icon>
     </button>
     <span>Iot Application</span>
@@ -15,13 +15,28 @@
     [opened]="!(isHandset$ | async)">
     
     <mat-nav-list>
-      <a mat-list-item href="#">Accueil</a>
-      <a mat-list-item href="#">Profile</a>
-      <a mat-list-item href="#" (click)="logout()">Logout</a>
+      <!-- When not logged in -->
+      <a mat-list-item (click)="close()" [routerLink]="['/login']" *ngIf="!userservice.isLoggedIn()" >Login</a>
+
+      <!-- When logged in -->
+      <a mat-list-item (click)="close()" [routerLink]="['/']" *ngIf="userservice.isLoggedIn()" >Accueil</a>
+      <a mat-list-item (click)="close()" [routerLink]="['/profile']" *ngIf="userservice.isLoggedIn()" >Profile</a>
+      <a class="logout" mat-list-item (click)="logout()" *ngIf="userservice.isLoggedIn()" >Logout</a>
+
+      <!-- When ADMIN -->
+      <a mat-list-item (click)="close()" [routerLink]="['/admin']" *ngIf="isAdmin()">Admin</a>
+      
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    
-    <!-- Add Content Here -->
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      {{errorMessage}}
+    </div>
+    <div class="alert alert-success" *ngIf="successMessage">
+        {{successMessage}}
+      </div>
+    <div class="fit">
+      <router-outlet></router-outlet>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

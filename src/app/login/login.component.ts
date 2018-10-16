@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserService } from '../services/users/user.service';
 
 @Component({
   selector: 'app-login',
@@ -8,15 +9,20 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private userservice: UserService) { }
 
   username: string;
   password: string;
+  errorMessage: string;
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  login() {
-    this.router.navigate(["index"]);
+  login(): void {
+    this.userservice.authenticateUser(this.username, this.password)
+      .subscribe(
+        () => this.router.navigate(['/'], { replaceUrl: true }),
+        () => this.errorMessage = 'Bad credentials'
+      );
   }
 }

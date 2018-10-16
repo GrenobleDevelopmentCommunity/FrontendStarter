@@ -14,3 +14,14 @@
 .mat-toolbar{
   height: 56px;
 }
+
+.fit{
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
+}
+
+.logout{
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+}
