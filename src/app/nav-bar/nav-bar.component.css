@@ -15,6 +15,7 @@
   height: 56px;
 }
 
+/* REM: not working on EDGE */
 .fit{
   height: -webkit-fill-available;
   width: -webkit-fill-available;
