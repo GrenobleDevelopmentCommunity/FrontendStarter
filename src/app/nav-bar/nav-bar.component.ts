@@ -33,7 +33,7 @@ export class NavBarComponent {
       },
       () => this.errorMessage = 'Error while login out'
     );
-    this.fadeOutTimer = timer(3000);
+    this.fadeOutTimer = timer(3000); // FIXME: timer is not cool
     const fadeOutMessages = this.fadeOutTimer.subscribe(
       () => {
         console.log('fadeOut');
