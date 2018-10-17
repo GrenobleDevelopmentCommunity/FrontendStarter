@@ -7,8 +7,8 @@ import { RoleAuthGuard } from './guards/role-auth.guard';
 import { LoginGuard } from './guards/login.guard';
 import { ProfileComponent } from './profile/profile.component';
 import { AdminComponent } from './admin/admin.component';
-import { Role } from './services/in-memory-data.service';
 import { AccueilComponent } from './accueil/accueil.component';
+import { Role } from './services/users/user';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
