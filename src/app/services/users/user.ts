@@ -1,14 +1,13 @@
+import { Token } from './user.service';
+
 export const enum Role {
     Admin,
     User
   }
 
+// ASK: Should I put Token in user ?
 export interface User {
-    password: string;
     email: string;
-}
-
-export interface Token {
-    token: string;
     role: Role;
+    token: Token;
 }

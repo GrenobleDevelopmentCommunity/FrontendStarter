@@ -1,42 +1,45 @@
-<mat-toolbar color="primary">
-    <button mat-icon-button (click)="drawer.toggle()" *ngIf="(isHandset$ | async)">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span>Iot Application</span>
-</mat-toolbar>
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav
-    #drawer
-    class="sidenav"
-    fixedInViewport="(isHandset$ | async)"
-    fixedTopGap="56"
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="!(isHandset$ | async)">
+<div class="basic-container" [class.is-mobile]="mobileQuery.matches">
+    <mat-toolbar class="toolbar" color="primary">
+        <button mat-icon-button (click)="drawer.toggle()" *ngIf="(isHandset$ | async)">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span>Iot Application</span>
+    </mat-toolbar>
+    <mat-sidenav-container class="sidenav-container"
+    [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+      <mat-sidenav
+        #drawer
+        class="sidenav"
+        fixedInViewport="(isHandset$ | async)"
+        fixedTopGap="56"
+        [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+        [mode]="(isHandset$ | async) ? 'over' : 'side'"
+        [opened]="!(isHandset$ | async)">
+        
+        <mat-nav-list>
+          <!-- When not logged in -->
+          <a mat-list-item (click)="close()" [routerLink]="['/login']" *ngIf="!userservice.isLoggedIn()" >Login</a>
     
-    <mat-nav-list>
-      <!-- When not logged in -->
-      <a mat-list-item (click)="close()" [routerLink]="['/login']" *ngIf="!userservice.isLoggedIn()" >Login</a>
-
-      <!-- When logged in -->
-      <a mat-list-item (click)="close()" [routerLink]="['/']" *ngIf="userservice.isLoggedIn()" >Accueil</a>
-      <a mat-list-item (click)="close()" [routerLink]="['/profile']" *ngIf="userservice.isLoggedIn()" >Profile</a>
-      <a class="logout" mat-list-item (click)="logout()" *ngIf="userservice.isLoggedIn()" >Logout</a>
-
-      <!-- When ADMIN -->
-      <a mat-list-item (click)="close()" [routerLink]="['/admin']" *ngIf="isAdmin()">Admin</a>
-      
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <div class="alert alert-danger" *ngIf="errorMessage">
-      {{errorMessage}}
-    </div>
-    <div class="alert alert-success" *ngIf="successMessage">
-        {{successMessage}}
-      </div>
-    <div class="fit">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+          <!-- When logged in -->
+          <a mat-list-item (click)="close()" [routerLink]="['/']" *ngIf="userservice.isLoggedIn()" >Accueil</a>
+          <a mat-list-item (click)="close()" [routerLink]="['/profile']" *ngIf="userservice.isLoggedIn()" >Profile</a>
+          <a class="logout" mat-list-item (click)="logout()" *ngIf="userservice.isLoggedIn()" >Logout</a>
+    
+          <!-- When ADMIN -->
+          <a mat-list-item (click)="close()" [routerLink]="['/admin']" *ngIf="isAdmin()">Admin</a>
+          
+        </mat-nav-list>
+      </mat-sidenav>
+      <mat-sidenav-content>
+        <div class="alert alert-danger" *ngIf="errorMessage">
+          {{errorMessage}}
+        </div>
+        <div class="alert alert-success" *ngIf="successMessage">
+            {{successMessage}}
+          </div>
+        <div class="fit">
+          <router-outlet></router-outlet>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>    
+</div>

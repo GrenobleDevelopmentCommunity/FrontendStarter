@@ -1,4 +1,44 @@
+.basic-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.is-mobile .toolbar {
+  position: fixed;
+  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+  z-index: 2;
+}
+
 .sidenav-container {
+  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+  flex: 1;
+}
+
+.is-mobile .sidenav-container {
+  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+  flex: 1 0 auto;
+}
+
+.logout{
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+}
+
+.mat-toolbar{
+  height: 56px;
+}
+
+
+
+/* .sidenav-container {
   height: 100%;
 }
 
@@ -11,18 +51,16 @@
   top: 0;
 }
 
-.mat-toolbar{
-  height: 56px;
-}
 
-/* REM: not working on EDGE */
-.fit{
-  height: -webkit-fill-available;
-  width: -webkit-fill-available;
-}
 
-.logout{
-  position: absolute;
-  width: 100%;
-  bottom: 0px;
-}
+
+
+
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%  !important;
+} */
