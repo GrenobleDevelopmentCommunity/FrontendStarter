@@ -1,4 +1,4 @@
-<div class="basic-container" [class.is-mobile]="mobileQuery.matches">
+<div class="basic-container" [class.is-mobile]="(isHandset$ | async)">
     <mat-toolbar class="toolbar" color="primary">
         <button mat-icon-button (click)="drawer.toggle()" *ngIf="(isHandset$ | async)">
           <mat-icon>menu</mat-icon>
@@ -6,7 +6,7 @@
         <span>Iot Application</span>
     </mat-toolbar>
     <mat-sidenav-container class="sidenav-container"
-    [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    [style.marginTop.px]="(isHandset$ | async) ? 56 : 0">
       <mat-sidenav
         #drawer
         class="sidenav"
