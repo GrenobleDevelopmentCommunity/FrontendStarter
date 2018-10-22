@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, switchMap } from 'rxjs/operators';
 import { User, Role } from './user';
 
 
@@ -21,11 +21,12 @@ export class UserService {
   private readonly loginUrl = '/oauth/token';
   private readonly logoutUrl = '/oauth/token/revoke';
   private readonly userControler = '/api/users';
+  private readonly userMe = '/api/users/me';
   private readonly authorizationKey = 'YmFja2VuZC1hcHA6YmFja2VuZC1zZWNyZXQ=';
 
   constructor(private http: HttpClient) { }
 
-  login(email: string, password: string): Observable<Token> {
+  login(email: string, password: string): Observable<Boolean> {
     const grant_type = 'password';
     const httpOptions = {
       headers: new HttpHeaders({
@@ -37,15 +38,23 @@ export class UserService {
                                    .set('password', password)
                                    .set('grant_type', grant_type)
                                    .toString();
-    // tslint:disable-next-line:max-line-length
-    return this.http.post<Token>(this.baseUrl + this.loginUrl, params,
-     httpOptions).pipe(
-      tap((token => {
-        // FIXME: change role
-        const user: User = { email, role: Role.Admin, token};
-        localStorage.setItem('user', JSON.stringify(user));
-        console.log(JSON.stringify(token));
-      })));
+    return this.http.post<Token>(this.baseUrl + this.loginUrl, params, httpOptions).pipe(
+      switchMap(
+      token => {
+        localStorage.setItem('token', JSON.stringify(token));
+        console.log(token);
+        return this.http.get<any>(this.baseUrl + this.userMe).pipe(
+          map(
+          user => {
+            const userMe: User = {email: user.email, role: user.role.id};
+            console.log(user);
+            console.log(userMe);
+            localStorage.setItem('user', JSON.stringify(userMe));
+            return true;
+          })
+        );
+      })
+    );
   }
 
   isLoggedIn(): boolean {
@@ -54,13 +63,7 @@ export class UserService {
   }
 
   logout(): Observable<void> {
-    const token = (JSON.parse(localStorage.getItem('user')) as User).token;
-    // const httpOptions = {
-    //   headers: new HttpHeaders({
-    //     'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-    //     'Authorization': 'Baerer ' + token.access_token
-    //    }),
-    // };
+    const token = (JSON.parse(localStorage.getItem('token')) as Token);
     const params = new HttpParams().set('token', token.access_token).toString();
     return this.http.post<void>(this.baseUrl + this.logoutUrl, params/*, httpOptions*/).pipe(
       tap(() => localStorage.clear())
@@ -76,13 +79,7 @@ export class UserService {
 
 
   addUser(email: string, password: string): Observable<User> {
-    return this.http.post<User>(this.baseUrl + this.userControler, {email, password}// ,
-      // {headers: {
-      //     'Content-Type': 'application/json',
-      //     Authorization: 'Bearer fe243f70-a05c-4311-8b3e-04a47c214d28'
-      //    }
-      // }
-      );
+    return this.http.post<User>(this.baseUrl + this.userControler, {email, password});
   }
 
   getUsers(): Observable<User[]> {
@@ -92,7 +89,7 @@ export class UserService {
           const users: User[] = [];
           for (let index = 0; index < emails.length; index++) {
             const element = emails[index];
-            users.push({email: element.email, role: null, token: null});
+            users.push({email: element.email, role: null}); // ASK : role user by default, but don't know if i have to take it
           }
           return users;
         }

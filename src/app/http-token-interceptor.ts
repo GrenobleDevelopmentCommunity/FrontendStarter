@@ -10,7 +10,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // For logout
         if (!req.headers.get('Authorization') && req.url.includes('oauth')) {
-            const token = (JSON.parse(localStorage.getItem('user')) as User).token;
+            const token = (JSON.parse(localStorage.getItem('token')) as Token);
             const headersToken = new HttpHeaders({
                   'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
                   'Authorization': 'Baerer ' + token.access_token
@@ -20,7 +20,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 
         // For API
         if (!req.headers.get('Authorization') && req.url.includes('api')) {
-            const token = (JSON.parse(localStorage.getItem('user')) as User).token;
+            const token = (JSON.parse(localStorage.getItem('token')) as Token);
             const headers = new HttpHeaders({
                   Authorization: `Bearer ${token.access_token}`
                  });
