@@ -1,8 +1,8 @@
 import { Token } from './user.service';
 
 export const enum Role {
-    Admin = 1,
-    User = 2
+    Admin = 'admin',
+    User = 'user'
   }
 
 // ASK: Should I put Token in user ?

@@ -3,12 +3,14 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { tap, map, switchMap } from 'rxjs/operators';
 import { User, Role } from './user';
+import { Timestamp } from '../../../../node_modules/rxjs/internal/operators/timestamp';
 
 
 export interface Token {
   access_token: string;
   token_type: string;
   refresh_token: string;
+  expire_in: number;
   scope: string;
 }
 
@@ -45,13 +47,12 @@ export class UserService {
         console.log(token);
         return this.http.get<any>(this.baseUrl + this.userMe).pipe(
           map(
-          user => {
-            const userMe: User = {email: user.email, role: user.role.id};
+          (user: User) => {
             console.log(user);
-            console.log(userMe);
-            localStorage.setItem('user', JSON.stringify(userMe));
+            localStorage.setItem('user', JSON.stringify(user));
             return true;
-          })
+          },
+          () => false)
         );
       })
     );
@@ -59,7 +60,7 @@ export class UserService {
 
   isLoggedIn(): boolean {
     // TODO: verifier la validite du token (date expiration)
-    return !!localStorage.getItem('user');
+    return !!localStorage.getItem('token');
   }
 
   logout(): Observable<void> {
@@ -72,7 +73,11 @@ export class UserService {
 
   isAdmin(): boolean {
     if (this.isLoggedIn()) {
-      return (JSON.parse(localStorage.getItem('user')) as User).role === Role.Admin;
+      try {
+        return (JSON.parse(localStorage.getItem('user')) as User).role === Role.Admin;
+      } catch (error) {
+        return false;
+      }
     }
     return false;
   }
